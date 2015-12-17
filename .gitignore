@@ -18,3 +18,4 @@ erl_crash.dump
 # Angular2
 */**/build
 */**/node_modules
+priv/static
