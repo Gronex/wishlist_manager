@@ -1,35 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<html>
 
-    <title>Hello WishlistManager!</title>
+  <head>
+    <title>Angular 2 QuickStart</title>
+
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <!-- 1. Load libraries -->
+    <script src="<%= static_path(@conn, "/node_modules/angular2/bundles/angular2-polyfills.js") %>"></script>
+    <script src="<%= static_path(@conn, "/node_modules/systemjs/dist/system.src.js") %>"></script>
+    <script src="<%= static_path(@conn, "/node_modules/rxjs/bundles/Rx.js") %>"></script>
+    <script src="<%= static_path(@conn, "/node_modules/angular2/bundles/angular2.dev.js") %>"></script>
+    <!-- 2. Configure SystemJS -->
+    <script>
+      System.config({
+        packages: {
+          build: {
+            format: 'register',
+            defaultExtension: 'js'
+          }
+        }
+      });
+      System.import('build/boot')
+            .then(null, console.error.bind(console));
+    </script>
+
   </head>
 
+  <!-- 3. Display the application -->
   <body>
-    <div class="container">
-      <header class="header">
-        <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
-          </ul>
-        </nav>
-        <span class="logo"></span>
-      </header>
-
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
-
-    </div> <!-- /container -->
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <my-app>Loading...</my-app>
   </body>
+
 </html>
