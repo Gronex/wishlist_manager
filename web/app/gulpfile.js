@@ -1,8 +1,23 @@
-var gulp = require('gulp'),
-  clean = require('gulp-clean');
+var gulp = require('gulp');
+var clean = require('gulp-clean');
+var ts = require('gulp-typescript');
 
 var outDir = "build";
 var finalDir = "../priv/static/app";
+
+var paths = {
+  html: "app/**/*.html",
+  ts: "app/**/*.ts"
+};
+
+var tsProject = ts.createProject('tsconfig.json');
+
+gulp.task('scripts', function() {
+  return gulp
+    .src("app/**/*.ts")
+    .pipe(ts(tsProject))
+    .pipe(gulp.dest(outDir));
+});
 
 gulp.task('clean', function(){
   return gulp
@@ -11,15 +26,19 @@ gulp.task('clean', function(){
 });
 
 gulp.task('html', function () {
-  gulp
-    .src(["./**/*.html"], {base: './app'})
+  return gulp
+    .src([paths.html], {base: './app'})
     .pipe(gulp.dest(outDir));
 });
 
-gulp.task('move', function () {
-  gulp
+gulp.task('move',['scripts'], function () {
+  return gulp
     .src(["./build/**/*", "node_modules/**/*", "css/**/*"], {base: './build'})
     .pipe(gulp.dest("../"+finalDir));
 });
 
-gulp.task('default', ['html']);
+gulp.task('watch-html', ['html'], () => {
+  gulp.watch(paths.html, ['html']);
+});
+
+gulp.task('default', ['html', 'scripts']);

@@ -1,0 +1,13 @@
+<table class="table">
+  <tr>
+    <th *ngFor="#header of headers">
+      {{header.text}}
+    </th>
+  </tr>
+
+  <tr *ngFor="#row of data">
+    <td *ngFor="#header of headers">
+      {{row[header.identifier].format()}}
+    </td>
+  </tr>
+</table>
