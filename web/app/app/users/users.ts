@@ -1,19 +1,34 @@
 import {Component} from 'angular2/core';
 import {Table, TableData, TableHeader} from '../directives/table/table';
+import { BackendService } from '../services/backend';
 
 @Component({
   templateUrl: "build/users/users.html",
   directives: [Table]
 })
 export class Users{
+  constructor(private backend: BackendService){
+  }
+
   private headers = [
     new TableHeader("firstName", "First Name"),
     new TableHeader("lastName", "Last Name"),
     new TableHeader("birthday", "Birthday"),
   ];
 
-  private data = [
-    { "firstName": new TableData("Mads"), "lastName": new TableData("Slotsbo"), "birthday": new TableData(new Date("1993-01-29"))},
-    { "firstName": new TableData("Anders"), "lastName": new TableData("Slotsbo"), "birthday": new TableData(new Date("1996-05-24"))}
-  ]
+  private users: {}[] = [];
+
+  ngOnInit() {
+    this.backend
+      .get("user")
+      .then(users => {
+        users.forEach(user => {
+          this.users.push({
+            "firstName": new TableData(user.firstName),
+            "lastName": new TableData(user.lastName),
+            "birthday": new TableData(new Date(user.birthday))
+          });
+        });
+      }, console.log);
+  }
 }

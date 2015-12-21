@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var clean = require('gulp-clean');
 var ts = require('gulp-typescript');
+var connect = require('gulp-connect');
 
 var outDir = "build";
 var finalDir = "../priv/static/app";
@@ -11,6 +12,16 @@ var paths = {
 };
 
 var tsProject = ts.createProject('tsconfig.json');
+
+gulp.task('serve', function() {
+  var opts = {
+    root: '.',
+    livereload: true,
+    fallback: "index.html"
+  };
+
+  connect.server(opts);
+});
 
 gulp.task('scripts', function() {
   return gulp
@@ -41,4 +52,5 @@ gulp.task('watch-html', ['html'], () => {
   gulp.watch(paths.html, ['html']);
 });
 
-gulp.task('default', ['html', 'scripts']);
+gulp.task('dev', ['watch-html', 'serve']);
+gulp.task('default', ['html', 'scripts', 'serve']);
