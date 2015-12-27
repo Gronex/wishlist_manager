@@ -4,7 +4,7 @@ var ts = require('gulp-typescript');
 var connect = require('gulp-connect');
 
 var outDir = "build";
-var finalDir = "../priv/static/app";
+var finalDir = "../priv/static/build";
 
 var paths = {
   html: "app/**/*.html",
@@ -44,7 +44,7 @@ gulp.task('html', function () {
 
 gulp.task('move',['scripts'], function () {
   return gulp
-    .src(["./build/**/*", "node_modules/**/*", "css/**/*"], {base: './build'})
+    .src(["./build/**/*", "node_modules/**/*", "bower_components/**/*", "css/**/*"], {base: './build'})
     .pipe(gulp.dest("../"+finalDir));
 });
 

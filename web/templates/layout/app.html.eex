@@ -3,13 +3,21 @@
 
   <head>
     <title>Angular 2 QuickStart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="/">
 
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/bower_components/bootstrap/dist/css/bootstrap.min.css") %>">
     <!-- 1. Load libraries -->
+    <script src="<%= static_path(@conn, "/bower_components/jquery/dist/jquery.min.js") %>"></script>
+    <script src="<%= static_path(@conn, "/bower_components/bootstrap/dist/js/bootstrap.min.js") %>"></script>
+
     <script src="<%= static_path(@conn, "/node_modules/angular2/bundles/angular2-polyfills.js") %>"></script>
     <script src="<%= static_path(@conn, "/node_modules/systemjs/dist/system.src.js") %>"></script>
     <script src="<%= static_path(@conn, "/node_modules/rxjs/bundles/Rx.js") %>"></script>
     <script src="<%= static_path(@conn, "/node_modules/angular2/bundles/angular2.dev.js") %>"></script>
+    <script src="<%= static_path(@conn, "/node_modules/angular2/bundles/router.dev.js") %>"></script>
+    <script src="<%= static_path(@conn, "/node_modules/angular2/bundles/http.dev.js") %>"></script>
     <!-- 2. Configure SystemJS -->
     <script>
       System.config({

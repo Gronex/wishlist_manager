@@ -20,7 +20,7 @@ export class Users{
 
   ngOnInit() {
     this.backend
-      .get("user")
+      .get("users")
       .then(users => {
         users.forEach(user => {
           this.users.push({
