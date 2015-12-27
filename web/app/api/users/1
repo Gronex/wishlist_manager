@@ -1,0 +1,31 @@
+{
+  "data": {
+    "id": 1,
+    "firstName": "Mads",
+    "lastName": "Slotsbo",
+    "birthday": "1993-01-29",
+    "items": [
+      {
+        "id": 1,
+        "name": "item1",
+        "description": "awesomeness",
+        "link": "google.com",
+        "user_id": 1
+      },
+      {
+        "id": 3,
+        "name": "item243",
+        "description": "slkfnskf jsdf s,df",
+        "link": "www.awesomeness.dk",
+        "user_id": 1
+      },
+      {
+        "id": 4,
+        "name": "google 2",
+        "description": "testing",
+        "link": "https://www.google.dk/?gws_rd=cr,ssl&ei=o7p_VoH6KKOCygOzyILIDA",
+        "user_id": 1
+      }
+    ]
+  }
+}
