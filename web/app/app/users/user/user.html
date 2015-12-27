@@ -1,0 +1,8 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    Name: {{user.firstName}} {{user.lastName}}<br>
+    Birthday: {{formatDate(user.birthday)}}
+  </div>
+</div>
+
+<custom-table [headers]="headers" [data]="wishlist"></custom-table>

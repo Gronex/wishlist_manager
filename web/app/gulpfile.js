@@ -52,5 +52,5 @@ gulp.task('watch-html', ['html'], () => {
   gulp.watch(paths.html, ['html']);
 });
 
-gulp.task('dev', ['watch-html', 'serve']);
+gulp.task('dev', ['watch-html', 'scripts', 'serve']);
 gulp.task('default', ['html', 'scripts', 'serve']);
