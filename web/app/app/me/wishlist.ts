@@ -19,12 +19,7 @@ export class WishlistComponent {
 
   constructor(private backend: BackendService){
     this.wishlist = [];
-    this.editing = {
-      "editing": false,
-      "name": "",
-      "description": "",
-      "link": ""
-    };
+    this.clearEdit();
   }
 
   ngOnInit() {
@@ -52,9 +47,18 @@ export class WishlistComponent {
     };
   }
 
+  clearEdit(){
+    this.editing = {
+      "editing": false,
+      "name": "",
+      "description": "",
+      "link": ""
+    };
+  }
+
   save(){
     if (this.editing["id"]){
-      var saved = this.backend
+      this.backend
         .put(["item", this.editing["id"]], this.editing)
         .then(resp => {
           var rowData = this.wishlist.find((val) => val.get("id") === this.editing["id"]);
@@ -64,7 +68,7 @@ export class WishlistComponent {
         });
     }
     else{
-      var saved = this.backend
+      this.backend
         .post(["item"], this.editing)
         .then(item => {
           var rowData = new Map<string, TableData>();
@@ -75,11 +79,6 @@ export class WishlistComponent {
           this.wishlist.push(new TableRow(rowData, (row) => this.chooseItem(row, this.wishlist)));
         });
     }
-    this.editing = {
-      "editing": false,
-      "name": "",
-      "description": "",
-      "link": ""
-    };
+    this.clearEdit();
   }
 }

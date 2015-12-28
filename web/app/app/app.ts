@@ -6,6 +6,7 @@ import {Info} from './info';
 import {UsersComponent} from './users/users';
 import {UserComponent} from './users/user/user';
 import {WishlistComponent} from './me/wishlist';
+import {User} from './model/user';
 
 @Component({
   selector: 'my-app',
@@ -19,4 +20,16 @@ import {WishlistComponent} from './me/wishlist';
   { path: 'users/:id', component: UserComponent, name: "Wishlist"},
   { path: 'wishlist', component: WishlistComponent, name: "MyWishlist"}
 ])
-export class App{ }
+export class App{
+  private user: User;
+
+  constructor(){
+    this.user = new User();
+
+    this.user.id = 1;
+    this.user.firstName = "Mads";
+    this.user.lastName = "Slotsbo";
+    this.user.email = "mads.slotsbo@gmail.com"
+    this.user.birthday = new Date("1993-29-01");
+  }
+}

@@ -14,6 +14,7 @@
       <input class="form-control" type="text" name="link" [(ngModel)]="editing.link" placeholder="Link">
     </div>
     <button type="submit" name="button" class="btn btn-default">Save</button>
+    <button type="button" name="button" class="btn btn-warning" (click)="clearEdit()">Reset</button>
   </form>
 </div><br>
 <custom-table [headers]="headers" [data]="wishlist" [link]="true"></custom-table>
