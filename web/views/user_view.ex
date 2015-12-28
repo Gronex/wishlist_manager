@@ -12,8 +12,8 @@ defmodule WishlistManager.UserView do
   def render("user.json", %{user: user}) do
     %{id: user.id,
       email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      firstName: user.first_name,
+      lastName: user.last_name,
       birthday: user.birthday,
       items: render_many(user.items, WishlistManager.ItemView, "item.json")}
   end
@@ -21,8 +21,8 @@ defmodule WishlistManager.UserView do
   def render("users.json", %{user: user}) do
     %{id: user.id,
       email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      firstName: user.first_name,
+      lastName: user.last_name,
       birthday: user.birthday}
   end
 end

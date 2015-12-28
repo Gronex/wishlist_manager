@@ -21,11 +21,9 @@ import {User} from './model/user';
   { path: 'wishlist', component: WishlistComponent, name: "MyWishlist"}
 ])
 export class App{
-  private user: User;
+  private user: User = new User();
 
   constructor(){
-    this.user = new User();
-
     this.user.id = 1;
     this.user.firstName = "Mads";
     this.user.lastName = "Slotsbo";

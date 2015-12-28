@@ -22,7 +22,7 @@ export class UserComponent {
   }
 
   ngOnInit() {
-    this.backend.get(['users', this.params.get('id')])
+    this.backend.get('users', this.params.get('id'))
       .then(resp => {
         this.user = resp.data;
 

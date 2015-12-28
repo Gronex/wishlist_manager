@@ -42,7 +42,7 @@ gulp.task('html', function () {
     .pipe(gulp.dest(outDir));
 });
 
-gulp.task('move',['scripts'], function () {
+gulp.task('move',['scripts', 'html'], function () {
   return gulp
     .src(["./build/**/*", "node_modules/**/*", "bower_components/**/*", "css/**/*"], {base: './build'})
     .pipe(gulp.dest("../"+finalDir));

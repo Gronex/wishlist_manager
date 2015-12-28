@@ -4,29 +4,30 @@ import {Http} from 'angular2/http';
 @Injectable()
 export class BackendService {
   private verbose: boolean = true;
-  private baseUrl: string = "api/";
+  private baseUrl: string = "http://localhost:4000/api";
 
-  constructor(private http: Http){
+  constructor(private http: Http){}
+
+  private urlHandler(path: Array<string>, resource: string, id?: string |number): string {
+    var cleanUrl: string = "";
+    if (path) cleanUrl = path.join("/");
+    cleanUrl += "/" + resource;
+    if (id) cleanUrl += "/" + id;
+    return this.baseUrl + cleanUrl;
   }
 
-  private urlHandler(url: string | Array<any>): string {
-    var cleanUrl: string;
-    if (url instanceof Array){
-      var tempUrl = "";
-      (<Array<any>>url).forEach(subPath => {
-        tempUrl += subPath + "/";
-      });
-      cleanUrl = tempUrl;
-    }
-    else cleanUrl = <string>url;
-    if (cleanUrl.charAt(cleanUrl.length-1) == "/") return cleanUrl.substring(0, cleanUrl.length - 1);
-    return cleanUrl;
+  private wrapData(holder: string, data: any): string{
+    var wrapped = {};
+    if (holder.endsWith("s")) holder = holder.substring(0, holder.length - 1);
+    wrapped[holder] = data;
+    return JSON.stringify(wrapped);
   }
 
-  get(url: string | Array<any>): Promise<any>{
+  //get(url: string | Array<any>): Promise<any>{
+  get(resource: string, id?: string | number, path?: Array<string>): Promise<any>{
     return new Promise((resolve, reject) => {
       this.http
-      .get(this.baseUrl + this.urlHandler(url))
+      .get(this.urlHandler(path, resource, id))
       .subscribe((resp) => {
         if (resp.status < 300){
           try {
@@ -49,11 +50,10 @@ export class BackendService {
     });
   }
 
-  post(url: string | Array<any>, body: any): Promise<any>{
-    return new Promise((resolve) => resolve(body));
-    /*return new Promise((resolve, reject) => {
+  post(body: any, resource: string, path?: Array<string>): Promise<any>{
+    return new Promise((resolve, reject) => {
       this.http
-        .post(this.baseUrl + this.urlHandler(url), body)
+        .post(this.urlHandler(path, resource), this.wrapData(resource, body))
         .subscribe((resp) => {
           if (resp.status < 300){
             try {
@@ -73,13 +73,13 @@ export class BackendService {
             reject(resp);
           }
         });
-    });*/
+    });
   }
 
-  put(url: string | Array<any>, body: any): Promise<any>{
+  put(body: any, resource: string, id: string | number, path?: Array<string>): Promise<any>{
     return new Promise((resolve, reject) => {
       this.http
-        .put(this.baseUrl + this.urlHandler(url), body)
+        .put(this.urlHandler(path, resource, id), this.wrapData(resource, body))
         .subscribe((resp) => {
           if (resp.status < 300){
             try {
@@ -102,10 +102,10 @@ export class BackendService {
     });
   }
 
-  delete(url: string | Array<any>){
+  delete(resource: string, id: string | number, path?: Array<string>){
     return new Promise((resolve, reject) => {
       this.http
-        .delete(this.baseUrl + this.urlHandler(url))
+        .delete(this.urlHandler(path, resource, id))
         .subscribe((resp) => {
           if (resp.status < 300) resolve(resp);
           else {

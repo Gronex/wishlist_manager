@@ -35,5 +35,6 @@ defmodule WishlistManager.Endpoint do
     key: "_wishlist_manager_key",
     signing_salt: "gxPX1Qfx"
 
+  plug CORSPlug, [origin: "*"]
   plug WishlistManager.Router
 end

@@ -20,7 +20,7 @@ export class UsersComponent{
 
   ngOnInit() {
     this.backend
-      .get("users.json")
+      .get("users")
       .then(users => {
         users.data.forEach(user => {
           var rowData = new Map<string, TableData>();
@@ -30,6 +30,6 @@ export class UsersComponent{
           var row = new TableRow(rowData, () => this.router.navigate(["Wishlist", {id: user.id}]));
           this.users.push(row);
         });
-      }, console.log);
+      });
   }
 }

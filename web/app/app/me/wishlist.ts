@@ -23,7 +23,7 @@ export class WishlistComponent {
   }
 
   ngOnInit() {
-    this.backend.get(['users', 1])
+    this.backend.get('users', 1)
       .then(resp => {
         this.userId = resp.id;
 
@@ -58,18 +58,19 @@ export class WishlistComponent {
 
   save(){
     if (this.editing["id"]){
+      var tmp = this.editing;
       this.backend
-        .put(["item", this.editing["id"]], this.editing)
+        .put(this.editing, "items", this.editing["id"])
         .then(resp => {
-          var rowData = this.wishlist.find((val) => val.get("id") === this.editing["id"]);
-          rowData.get("name").update(resp["name"]);
-          rowData.get("description").update(resp["description"]);
-          rowData.get("link").update(resp["link"]);
+          var rowData = this.wishlist.find((val) => val.get("id").format() == tmp["id"]);
+          rowData.get("name").update(tmp["name"]);
+          rowData.get("description").update(tmp["description"]);
+          rowData.get("link").update(tmp["link"]);
         });
     }
     else{
       this.backend
-        .post(["item"], this.editing)
+        .post(this.editing, "items")
         .then(item => {
           var rowData = new Map<string, TableData>();
           rowData.set('id', new TableData(item.id));
