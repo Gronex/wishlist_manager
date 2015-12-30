@@ -19,6 +19,14 @@ defmodule WishlistManager.Router do
     get "/", PageController, :index
   end
 
+  scope "/auth", WishlistManager do
+    pipe_through :api
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+    post "/identity/callback", AuthController, :callback
+  end
+
   # Other scopes may use custom stacks.
   scope "/api", WishlistManager do
     pipe_through :api

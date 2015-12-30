@@ -27,3 +27,16 @@ import_config "#{Mix.env}.exs"
 config :phoenix, :generators,
   migration: true,
   binary_id: false
+
+config :ueberauth, Ueberauth,
+  providers: [
+    identity: { Ueberauth.Strategy.Identity, [
+      callback_methods: ["POST"],
+      uid_field: :username,
+    ] },
+    google: { Ueberauth.Strategy.Google, [] },
+  ]
+
+config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+  client_id: System.get_env("GOOGLE_CLIENT_ID"), # Needs to be set in env vars
+  client_secret: System.get_env("GOOGLE_CLIENT_SECRET") # Needs to be set in env vars

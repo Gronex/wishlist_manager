@@ -19,7 +19,7 @@ defmodule WishlistManager.Mixfile do
   def application do
     [mod: {WishlistManager, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :ueberauth_identity, :ueberauth_google]]
   end
 
   # Specifies which paths to compile per environment.
@@ -37,7 +37,10 @@ defmodule WishlistManager.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
-     {:cors_plug, "~> 0.1.4"}]
+     {:cors_plug, "~> 0.1.4"},
+     {:ueberauth, "~> 0.2"},
+     {:ueberauth_identity, "~> 0.2.1"},
+     {:ueberauth_google, "~> 0.2"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.
