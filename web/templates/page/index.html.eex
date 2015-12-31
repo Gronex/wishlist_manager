@@ -1,1 +1,4 @@
 This is the index page of an api, no frontend is hosted here...
+
+
+<a href="auth/google">Google Login</a>
