@@ -6,7 +6,10 @@ defmodule WishlistManager.AuthView do
   end
 
   def render("auth.json", %{data: data}) do
-    %{data: data}
+    data
   end
 
+  def render("error.json", %{}) do
+    %{error: :unauthorized}
+  end
 end

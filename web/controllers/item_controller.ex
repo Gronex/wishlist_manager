@@ -11,7 +11,7 @@ defmodule WishlistManager.ItemController do
   end
 
   def create(conn, %{"item" => item_params}) do
-    changeset = Item.changeset(%Item{}, item_params)
+    changeset = Item.changeset(%Item{user_id: 1}, item_params)
 
     case Repo.insert(changeset) do
       {:ok, item} ->

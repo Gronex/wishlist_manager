@@ -9,5 +9,5 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-user = WishlistManager.Repo.insert!(%WishlistManager.User{first_name: "Mads", last_name: "Slotsbo", birthday: Ecto.Date.cast!("1993-01-29")})
-WishlistManager.Repo.insert!(%WishlistManager.Item{name: "item of the first degree", description: "awesomeness", user_id: user.id})
+#user = WishlistManager.Repo.insert!(%WishlistManager.User{first_name: "Mads", last_name: "Slotsbo", birthday: Ecto.Date.cast!("1993-01-29"), email: "mads.slotsbo@gmail.com"})
+#WishlistManager.Repo.insert!(%WishlistManager.Item{name: "item of the first degree", description: "awesomeness", user_id: user.id})
