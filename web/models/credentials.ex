@@ -29,6 +29,6 @@ defmodule WishlistManager.Credentials do
     |> unique_constraint(:user_identifier)
   end
 
-  def load_user(nil), do: :not_found
+  def load_user(u) when is_nil(u), do: :not_found
   def load_user(user), do: user |> Repo.preload [:user]
 end

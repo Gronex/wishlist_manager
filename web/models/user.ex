@@ -24,7 +24,7 @@ defmodule WishlistManager.User do
     model
     |> cast(params, @required_fields, @optional_fields)
     |> validate_format(:email, ~r/^(\S+)@(\S+)\.(\S+)$/)
-    |> unique_constraint(:user_identifier)
+    |> unique_constraint(:email)
   end
 
   def full_name(user), do: user.first_name <> " " <> user.last_name

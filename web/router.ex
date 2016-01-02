@@ -24,7 +24,8 @@ defmodule WishlistManager.Router do
 
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
-    post "/identity/callback", AuthController, :callback_identity
+    post "/:provider/callback", AuthController, :identity_callback
+    post "/register", AuthController, :register
   end
 
   # Other scopes may use custom stacks.
