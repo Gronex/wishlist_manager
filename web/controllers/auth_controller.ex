@@ -23,8 +23,7 @@ defmodule WishlistManager.AuthController do
             conn |> send_resp(401, "")
           creds ->
             if(Bcrypt.checkpw(auth.credentials.other.password, creds.password_hash)) do
-              # should create token here
-              result = %{name: User.full_name(creds.user), provider: :identity, email: creds.user_identifier, token: get_token(creds.user)} #info to give to the client
+              result = %{name: User.full_name(creds.user), provider: :identity, email: creds.user_identifier, token: generate_token(creds.user)} #info to give to the client
               conn
               |> render("auth.json", data: result)
             else
@@ -39,7 +38,6 @@ defmodule WishlistManager.AuthController do
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn,  %{"provider" => provider}) do
-    # should create token here
     case Repo.get_by(Credentials, user_identifier: auth.uid) |> Credentials.load_user do
       :not_found ->
         user_changeset = User.changeset(%User{} ,%{first_name: auth.info.first_name, last_name: auth.info.last_name, email: auth.info.email})
@@ -49,14 +47,14 @@ defmodule WishlistManager.AuthController do
             {:ok, credentials} = Repo.insert(cred_changeset)
             conn
             |> put_status(:created)
-            |> render("auth.json", data: %{name: name_from_auth(auth), provider: auth.provider, email: auth.info.email, token: get_token(user)})
+            |> render("auth.json", data: %{name: name_from_auth(auth), provider: auth.provider, email: auth.info.email, token: generate_token(user)})
           {:error, changeset} ->
             conn
             |> put_status(:bad_request)
             |> render(WishlistManager.ChangesetView, "error.json", changeset: changeset)
         end
       creds ->
-        result = %{name: name_from_auth(auth), provider: auth.provider, email: auth.info.email, token: get_token(creds.user)} #info to give to the client
+        result = %{name: name_from_auth(auth), provider: auth.provider, email: auth.info.email, token: generate_token(creds.user)} #info to give to the client
         conn
         |> render("auth.json", data: result)
     end
@@ -71,7 +69,6 @@ defmodule WishlistManager.AuthController do
       user_changeset = User.changeset(%User{email: user_params["username"]}, user_params)
       case Repo.insert(user_changeset) do
         {:ok, user} ->
-          # TODO: check passwords in cred_changeset
           cred_changeset = Credentials.changeset(
             %Credentials{user_id: user.id, provider: Atom.to_string(:identity), user_identifier: user.email, password_hash: Bcrypt.hashpwsalt(user_params["password"])}, user_params)
           case Repo.insert(cred_changeset) do
@@ -79,7 +76,7 @@ defmodule WishlistManager.AuthController do
               conn
               |> put_status(:created)
               |> put_resp_header("location", item_path(conn, :show, user))
-              |> render("auth.json", data: %{name: User.full_name(user), provider: :identity, email: user.email, token: get_token(user)})
+              |> render("auth.json", data: %{name: User.full_name(user), provider: :identity, email: user.email, token: generate_token(user)})
             {:error, changeset} ->
               conn
               |> put_status(:unprocessable_entity)
@@ -93,7 +90,7 @@ defmodule WishlistManager.AuthController do
     end
   end
 
-  defp get_token(user) do
+  defp generate_token(user) do
     user.email
   end
 
