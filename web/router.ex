@@ -11,6 +11,12 @@ defmodule WishlistManager.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Guardian.Plug.VerifyHeader
+    plug Guardian.Plug.LoadResource
+  end
+
+  pipeline :api_auth do
+    plug Guardian.Plug.EnsureAuthenticated, handler: WishlistManager.AuthController
   end
 
   scope "/", WishlistManager do
@@ -30,9 +36,9 @@ defmodule WishlistManager.Router do
 
   # Other scopes may use custom stacks.
   scope "/api", WishlistManager do
-    pipe_through :api
+    pipe_through [:api, :api_auth]
 
-    resources "/users", UserController, except: [:new, :edit]
+    resources "/users", UserController, except: [:new, :edit, :delete, :create]
     resources "/items", ItemController, except: [:new, :edit]
   end
 end

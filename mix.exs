@@ -42,7 +42,8 @@ defmodule WishlistManager.Mixfile do
      {:ueberauth, "~> 0.2"},
      {:ueberauth_identity, "~> 0.2.1"},
      {:ueberauth_google, "~> 0.2"},
-     {:comeonin, "~> 2.0"}]
+     {:comeonin, "~> 2.0"},
+     {:guardian, "~> 0.9.0"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

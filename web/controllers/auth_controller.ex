@@ -61,6 +61,7 @@ defmodule WishlistManager.AuthController do
   end
 
   def register(conn, %{"user" => user_params}) do
+    # Do more verification mby as function guard
     if user_params["password"] != user_params["confirm_password"] do
       conn
       |> put_status(:bad_request)
@@ -90,8 +91,13 @@ defmodule WishlistManager.AuthController do
     end
   end
 
+  def unauthenticated(conn, _params) do
+    conn |> send_resp(401, "")
+  end
+
   defp generate_token(user) do
-    user.email
+    {:ok, jwt, full_claims} = Guardian.encode_and_sign(user, :api)
+    jwt
   end
 
   defp name_from_auth(auth) do

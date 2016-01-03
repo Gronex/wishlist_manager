@@ -40,3 +40,12 @@ config :ueberauth, Ueberauth,
 config :ueberauth, Ueberauth.Strategy.Google.OAuth,
   client_id: System.get_env("GOOGLE_CLIENT_ID"), # Needs to be set in env vars
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET") # Needs to be set in env vars
+
+config :guardian, Guardian,
+  allowed_algos: ["HS512"], # optional
+  verify_module: Guardian.JWT,  # optional
+  issuer: "wishlist_manager",
+  ttl: {30, :days},
+  verify_issuer: true, # optional
+  secret_key: "super_secret",
+  serializer: WishlistManager.GuardianSerializer
