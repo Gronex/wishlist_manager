@@ -23,7 +23,7 @@ defmodule WishlistManager.AuthController do
             conn |> send_resp(401, "")
           creds ->
             if(Bcrypt.checkpw(auth.credentials.other.password, creds.password_hash)) do
-              result = %{name: User.full_name(creds.user), provider: :identity, email: creds.user_identifier, token: generate_token(creds.user)} #info to give to the client
+              result = %{name: User.full_name(creds.user), id: creds.user.id, provider: :identity, email: creds.user_identifier, token: generate_token(creds.user)} #info to give to the client
               conn
               |> render("auth.json", data: result)
             else
@@ -47,14 +47,14 @@ defmodule WishlistManager.AuthController do
             {:ok, credentials} = Repo.insert(cred_changeset)
             conn
             |> put_status(:created)
-            |> render("auth.json", data: %{name: name_from_auth(auth), provider: auth.provider, email: auth.info.email, token: generate_token(user)})
+            |> render("auth.json", data: %{name: name_from_auth(auth), id: user.id, provider: auth.provider, email: auth.info.email, token: generate_token(user)})
           {:error, changeset} ->
             conn
             |> put_status(:bad_request)
             |> render(WishlistManager.ChangesetView, "error.json", changeset: changeset)
         end
       creds ->
-        result = %{name: name_from_auth(auth), provider: auth.provider, email: auth.info.email, token: generate_token(creds.user)} #info to give to the client
+        result = %{name: name_from_auth(auth), id: creds.user.id, provider: auth.provider, email: auth.info.email, token: generate_token(creds.user)} #info to give to the client
         conn
         |> render("auth.json", data: result)
     end
@@ -77,7 +77,7 @@ defmodule WishlistManager.AuthController do
               conn
               |> put_status(:created)
               |> put_resp_header("location", item_path(conn, :show, user))
-              |> render("auth.json", data: %{name: User.full_name(user), provider: :identity, email: user.email, token: generate_token(user)})
+              |> render("auth.json", data: %{name: User.full_name(user), id: user.id, provider: :identity, email: user.email, token: generate_token(user)})
             {:error, changeset} ->
               conn
               |> put_status(:unprocessable_entity)

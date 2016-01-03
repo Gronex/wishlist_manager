@@ -33,11 +33,11 @@ defmodule WishlistManager.ItemController do
   end
 
   def update(conn, %{"id" => id, "item" => item_params}, user, _claims) do
+    item = Repo.get!(Item, id)
 
-    unless(to_string(user.id) == id) do
+    unless(user.id == item.user_id) do
       WishlistManager.AuthController.unauthenticated(conn, item_params)
     else
-      item = Repo.get!(Item, id)
       changeset = Item.changeset(item, item_params)
 
       case Repo.update(changeset) do
@@ -52,10 +52,10 @@ defmodule WishlistManager.ItemController do
   end
 
   def delete(conn, %{"id" => id}, user, _claims) do
-    unless(to_string(user.id) == id) do
+      item = Repo.get!(Item, id)
+    unless(user.id == item.user_id) do
       WishlistManager.AuthController.unauthenticated(conn, id)
     else
-      item = Repo.get!(Item, id)
 
       # Here we use delete! (with a bang) because we expect
       # it to always work (and if it does not, it will raise).
