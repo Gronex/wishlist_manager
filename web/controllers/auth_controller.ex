@@ -44,7 +44,7 @@ defmodule WishlistManager.AuthController do
         case Repo.insert(user_changeset) do
           {:ok, user} ->
             cred_changeset = Credentials.changeset(%Credentials{user_id: user.id}, %{provider: provider, user_identifier: auth.uid})
-            {:ok, credentials} = Repo.insert(cred_changeset)
+            {:ok, _credentials} = Repo.insert(cred_changeset)
             conn
             |> put_status(:created)
             |> render("auth.json", data: %{name: name_from_auth(auth), id: user.id, provider: auth.provider, email: auth.info.email, token: generate_token(user)})
@@ -72,7 +72,7 @@ defmodule WishlistManager.AuthController do
             cred_changeset = Credentials.changeset(
             %Credentials{user_id: user.id, provider: Atom.to_string(:identity), user_identifier: user.email, password_hash: Bcrypt.hashpwsalt(password)}, user_params)
             case Repo.insert(cred_changeset) do
-              {:ok, credentials} ->
+              {:ok, _credentials} ->
                 conn
                 |> put_status(:created)
                 |> put_resp_header("location", item_path(conn, :show, user))
@@ -90,11 +90,6 @@ defmodule WishlistManager.AuthController do
     end
   end
 
-
-  @doc """
-  Validates that a password matches, and that it is at least 8 characters long,
-  and has at least one upper- and one lower-case letter, as well as at least one digit
-  """
   defp password_valid?(password, password) do
     if (Regex.match?(~r/((?=.*\d+)(?=.*[a-z]+)(?=.*[A-Z]+)).{8,}/, password)) do
       {:ok, password}
@@ -103,14 +98,14 @@ defmodule WishlistManager.AuthController do
     end
   end
 
-  defp password_valid?(password, _confirm_password), do: {:error, "password and confirm_password does not match"}
+  defp password_valid?(_password, _confirm_password), do: {:error, "password and confirm_password does not match"}
 
   def unauthenticated(conn, _params) do
     conn |> send_resp(401, "")
   end
 
   defp generate_token(user) do
-    {:ok, jwt, full_claims} = Guardian.encode_and_sign(user, :api)
+    {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user, :api)
     jwt
   end
 
@@ -120,7 +115,7 @@ defmodule WishlistManager.AuthController do
     else
       name = [auth.info.first_name, auth.info.last_name]
       |> Enum.filter(&(&1 != nil and &1 != ""))
-      if length(name) == 0, do: auth.info.nickname, else: name = Enum.join(name, " ")
+      if length(name) == 0, do: auth.info.nickname, else: Enum.join(name, " ")
     end
   end
 end
