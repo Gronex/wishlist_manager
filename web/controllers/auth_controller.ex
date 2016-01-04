@@ -61,35 +61,49 @@ defmodule WishlistManager.AuthController do
   end
 
   def register(conn, %{"user" => user_params}) do
-    # Do more verification mby as function guard
-    if user_params["password"] != user_params["confirm_password"] do
-      conn
-      |> put_status(:bad_request)
-      |> render("error.json", reason: "confirm_password not matching password")
-    else
-      user_changeset = User.changeset(%User{email: user_params["username"]}, user_params)
-      case Repo.insert(user_changeset) do
-        {:ok, user} ->
-          cred_changeset = Credentials.changeset(
-            %Credentials{user_id: user.id, provider: Atom.to_string(:identity), user_identifier: user.email, password_hash: Bcrypt.hashpwsalt(user_params["password"])}, user_params)
-          case Repo.insert(cred_changeset) do
-            {:ok, credentials} ->
-              conn
-              |> put_status(:created)
-              |> put_resp_header("location", item_path(conn, :show, user))
-              |> render("auth.json", data: %{name: User.full_name(user), id: user.id, provider: :identity, email: user.email, token: generate_token(user)})
-            {:error, changeset} ->
-              conn
-              |> put_status(:unprocessable_entity)
-              |> render(WishlistManager.ChangesetView, "error.json", changeset: changeset)
-          end
-        {:error, changeset} ->
-          conn
-          |> put_status(:bad_request)
-          |> render(WishlistManager.ChangesetView, "error.json", changeset: changeset)
-      end
+    case password_valid?(user_params["password"], user_params["confirm_password"]) do
+      {:error, reason} -> conn
+        |> put_status(:bad_request)
+        |> render("error.json", reason: reason)
+      {:ok, password} ->
+        user_changeset = User.changeset(%User{email: user_params["username"]}, user_params)
+        case Repo.insert(user_changeset) do
+          {:ok, user} ->
+            cred_changeset = Credentials.changeset(
+            %Credentials{user_id: user.id, provider: Atom.to_string(:identity), user_identifier: user.email, password_hash: Bcrypt.hashpwsalt(password)}, user_params)
+            case Repo.insert(cred_changeset) do
+              {:ok, credentials} ->
+                conn
+                |> put_status(:created)
+                |> put_resp_header("location", item_path(conn, :show, user))
+                |> render("auth.json", data: %{name: User.full_name(user), id: user.id, provider: :identity, email: user.email, token: generate_token(user)})
+              {:error, changeset} ->
+                conn
+                |> put_status(:unprocessable_entity)
+                |> render(WishlistManager.ChangesetView, "error.json", changeset: changeset)
+            end
+          {:error, changeset} ->
+            conn
+            |> put_status(:bad_request)
+            |> render(WishlistManager.ChangesetView, "error.json", changeset: changeset)
+        end
     end
   end
+
+
+  @doc """
+  Validates that a password matches, and that it is at least 8 characters long,
+  and has at least one upper- and one lower-case letter, as well as at least one digit
+  """
+  defp password_valid?(password, password) do
+    if (Regex.match?(~r/((?=.*\d+)(?=.*[a-z]+)(?=.*[A-Z]+)).{8,}/, password)) do
+      {:ok, password}
+    else
+      {:error, "Password must be at least 8 characters long, and contain a mix of numbers, lower- and upper-case letters"}
+    end
+  end
+
+  defp password_valid?(password, _confirm_password), do: {:error, "password and confirm_password does not match"}
 
   def unauthenticated(conn, _params) do
     conn |> send_resp(401, "")
