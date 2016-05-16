@@ -53,9 +53,9 @@ defmodule WishlistManager.ItemController do
 
   def delete(conn, %{"id" => id}, user, _claims) do
       item = Repo.get!(Item, id)
-    unless(user.id == item.user_id) do
-      WishlistManager.AuthController.unauthenticated(conn, id)
-    else
+      unless(user.id == item.user_id) do
+        WishlistManager.AuthController.unauthenticated(conn, id)
+      else
 
       # Here we use delete! (with a bang) because we expect
       # it to always work (and if it does not, it will raise).
